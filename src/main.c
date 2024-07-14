@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    Level_GetScreenMetatiles(0, 13, 12);
+    Level_GetScreenMetatiles(0, 12, 12);
 
     return 0;
 }

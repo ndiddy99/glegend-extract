@@ -22,10 +22,17 @@
 
 typedef struct {
     Uint16 addr;
-    Uint16 aboveAddr;
-    Uint16 belowAddr;
+    Uint16 topAddr;
+    Uint16 bottomAddr;
     Uint16 leftAddr;
     Uint16 rightAddr;
 } ScreenData;
+
+typedef struct {
+    Uint8 byte_5d;
+    Uint8 byte_5e;
+    Uint8 byte_57;
+    Uint8 byte_55;
+} ScreenBlockData;
 
 void Level_GetScreenMetatiles(int level, int screenX, int screenY);
