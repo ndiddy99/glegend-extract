@@ -9,6 +9,8 @@ set(SOURCE_LIST
     "src/level.h"
     "src/rom.c"
     "src/rom.h"
+    "src/tile.c"
+    "src/tile.h"
 )
 
 add_executable(glegend-extract ${SOURCE_LIST})

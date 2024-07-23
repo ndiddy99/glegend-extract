@@ -1,0 +1,81 @@
+A5: VRAM transfer mode
+1 - copy row of tiles & attributes?
+2 - sets A5 to 0, ORs AC with #$20, copies row from $150-$16f
+
+AE: row to write?
+AD: VRAM write address high byte
+AC: VRAM write address low byte
+AA: attribute table offset byte
+
+4E8-4EF: attribute buffer
+130-14f: tile buffer (top row?)
+150-16f: tile buffer (bottom row?)
+
+740-7ff: metatile buffer (only when copying level data to screen)
+bank 5 8155: creates metatile buffer
+
+30: game mode (0 = overhead)
+50: area number
+52: screen x pos
+53: screen y pos
+a4: screen transition direction (0 = up, 2 = left, 6 = right, 8 = down)
+
+A7CA: pointers used to set $14, indexed by area number
+A7E2: pointers used to set $16, indexed by area number (only used for corridor mode?)
+	in overhead mode, $16 is always set to $A916
+A7B0: pointers used to set $18, indexed by area number
+
+stuff that writes to 740: 8155, A6EB
+
+83b3: writes to 130, 4e8
+
+ad1a: writes to 460, 468, 470, 478
+
+dd54: copies tilemap buffer to vram
+
+8155:
+$12 = ($18),1
+$11 = $1b = ($18),2
+$10 = $1a = ($18),3
+
+A6EB:
+$10 = ($18),y (start x position)
+$13 = +1
+$11 = $13 & 0x7f
+$12 = +2
+
+$18 data format
+--- first section ---
+byte 0: floor section data length
+byte 1: floor pattern start row
+byte 2: floor pattern width
+byte 3: floor pattern height
+byte(s) n: floor pattern data
+--- next sections ---
+byte 0: section data length
+byte 1: section write offset
+byte 2: section width (high bit set = 1 byte of data, fill the section)
+byte 3: section height (high bit set = load $18 from an existing data pointer)
+bytes n: section data (left->right, top->bottom)
+
+
+8071: sets up $e0, $e4
+initialization:
+$19 = screenY
+$18 = screenX
+$15, $14 = 0
+$16, 17 = $8a6e
+
+pointer to data for above screen: $e0
+... left screen: $e2
+... curr screen: $e4
+... right screen: $e6
+... below screen: $e8
+
+data format: 2 bytes each?
+byte 0: 0x10 = objects on screen
+byte 1:
+	0x80 = open to screen above
+	0x40 = open to screen left
+	0x20 = open to screen right
+	0x10 = open to screen down
