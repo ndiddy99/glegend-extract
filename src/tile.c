@@ -19,6 +19,7 @@
 
 #include "constants.h"
 #include "rom.h"
+#include "tile.h"
 
 typedef struct {
     Uint8 byte_478[8];
@@ -26,11 +27,11 @@ typedef struct {
     Uint16 metatilePtrs[8];
 } TilesetData;
 
-void Tile_InitTilesetData(int areaNum, TilesetData *out) {
-    Uint8 tileset = ROM_Read(0xad91 + (areaNum * 2) + 1);
+static void Tile_InitTilesetData(int areaNum, TilesetData *out) {
+    Uint8 tileset = ROM_Read(0xad91 + (areaNum * 3));
     // TODO copy rest of init code if necessary (see $aca9)
 
-    Uint16 dataAddr = 0xae24 + (tileset * 2);
+    Uint16 dataAddr = ROM_Read16(0xae24 + (tileset * 2));
     int count = ROM_Read(dataAddr++);
     for (int i = 0; i < count; i++) {
         int index = ROM_Read(dataAddr) & 0x7;
@@ -41,7 +42,7 @@ void Tile_InitTilesetData(int areaNum, TilesetData *out) {
     }
 }
 
-void Tile_MetatileRowToTiles(TilesetData *data, Uint8 *metatiles, Uint8 *tiles, Uint8 *pals) {
+static void Tile_MetatileRowToTiles(TilesetData *data, Uint8 *metatiles, Uint8 *tiles, Uint8 *pals) {
     for (int i = 15; i >= 0; i--) {
         Uint8 metatile = metatiles[i];
         Uint16 ptr = (metatile & 0x1f) * 5;
@@ -76,5 +77,13 @@ void Tile_MetatileRowToTiles(TilesetData *data, Uint8 *metatiles, Uint8 *tiles, 
         pals[i * 2 + 1]  = palette;
         pals[i * 2 + 32] = palette;
         pals[i * 2 + 33] = palette;
+    }
+}
+
+void Tile_GetScreenTiles(int areaNum, Uint8 *metatiles, Uint8 *tiles, Uint8 *pals) {
+    TilesetData data;
+    Tile_InitTilesetData(areaNum + 5, &data);
+    for (int i = 0; i < 12; i++) {
+        Tile_MetatileRowToTiles(&data, metatiles + (i * 16), tiles + (i * 32 * 2), pals + (i * 32 * 2));
     }
 }

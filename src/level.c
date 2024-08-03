@@ -124,10 +124,9 @@ void Level_LoadCommonMetatiles(int *addr, Uint8 *out) {
     }
 }
 
-void Level_GetScreenMetatiles(int level, int screenX, int screenY) {
+void Level_GetScreenMetatiles(int level, int screenX, int screenY, Uint8 *out) {
     ScreenData data;
     ScreenBlockData blockData;
-    Uint8 out[0xc0];
 
     Level_GetScreenData(screenX, screenY, &data);
     Level_GetScreenBlockData(&data, &blockData);

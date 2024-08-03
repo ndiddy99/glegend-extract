@@ -35,4 +35,11 @@ typedef struct {
     Uint8 byte_55;
 } ScreenBlockData;
 
-void Level_GetScreenMetatiles(int level, int screenX, int screenY);
+/**
+ * @brief Draws the metatiles for a given screen
+ * @param level level number
+ * @param screenX screen x coordinate
+ * @param screenY screen y coordinate
+ * @param out metatile array to write to (must be size 0xc0)
+ */
+void Level_GetScreenMetatiles(int level, int screenX, int screenY, Uint8 *out);
